@@ -1,4 +1,4 @@
-import { Game } from './classes.js'
+import Game from './classes/game.js'
 
 // init method
 const init = () => {
@@ -29,7 +29,7 @@ const init = () => {
   canvas.width = GAME_WIDTH
   canvas.height = GAME_HEIGHT
 
-  animate()
+  animate(0)
 }
 
 window.addEventListener('load', init)
