@@ -6,17 +6,17 @@ export default class Projectile {
     this.width = 10
     this.height = 3
     this.speed = 3
-    this.outOfRange = false
+    this.readyToRemove = false
   }
 
   update() {
     this.x += this.speed
     if (this.x > this.game.width * 0.75)
-      this.outOfRange = true
+      this.readyToRemove = true
   }
 
   draw(context) {
-    context.fillStyle = 'red'
+    context.fillStyle = 'yellow'
     context.fillRect(this.x, this.y, this.width, this.height)
   }
 }

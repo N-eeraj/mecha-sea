@@ -22,7 +22,7 @@ export default class Player {
 
     // handle projectiles
     this.projectiles.forEach(projectile => projectile.update())
-    this.projectiles = this.projectiles.filter(projectile => !projectile.outOfRange)
+    this.projectiles = this.projectiles.filter(({ readyToRemove }) => !readyToRemove)
   }
 
   draw(context) {

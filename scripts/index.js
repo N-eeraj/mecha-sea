@@ -23,7 +23,8 @@ const init = () => {
     ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT)
     game.update(deltaTime)
     game.draw(ctx)
-    requestAnimationFrame(animate)
+    if (!game.gameOver)
+      requestAnimationFrame(animate)
   }
 
   canvas.width = GAME_WIDTH
