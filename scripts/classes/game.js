@@ -1,6 +1,10 @@
 import InputHandler from "./input.js"
 import Player from "./player.js"
-import { Angler } from "./enemies.js"
+import {
+  Angler1,
+  Angler2,
+  Lucky,
+} from "./enemies.js"
 import Background from "./background.js"
 import UI from "./ui.js"
 
@@ -83,7 +87,12 @@ export default class Game {
   }
 
   addEnemy() {
-    this.enemy.current.push(new Angler(this))
+    const random = Math.random()
+    this.enemy.current.push((() => {
+      if (random < 0.4) return new Angler1(this)
+      if (random < 0.8) return new Angler2(this)
+      return new Lucky(this)
+    })())
   }
 
   checkCollission(object1, object2) {

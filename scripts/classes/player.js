@@ -5,6 +5,12 @@ export default class Player {
     this.game = game
     this.width = 120
     this.height = 190
+    this.image = document.getElementById('player')
+    this.frame = {
+      x: 0,
+      y: 0,
+      max: 37
+    }
     this.x = 20
     this.y = 100
     this.speedY = 0
@@ -25,17 +31,20 @@ export default class Player {
     // handle projectiles
     this.projectiles.forEach(projectile => projectile.update())
     this.projectiles = this.projectiles.filter(({ readyToRemove }) => !readyToRemove)
+
+    if (this.frame.x < this.frame.max) ++this.frame.x
+    else this.frame.x = 0
   }
 
   draw(context) {
     context.fillStyle = 'blue'
-    context.fillRect(this.x, this.y, this.width, this.height)
+    context.drawImage(this.image, this.frame.x * this.width, this.frame.y * this.height, this.width, this.height, this.x, this.y, this.width, this.height)
     this.projectiles.forEach(projectile => projectile.draw(context))
   }
 
   shootTop() {
     if (!this.game.ammo.current) return
-    this.projectiles.push(new Projectile(this.game, this.x + this.width / 2, this.y))
+    this.projectiles.push(new Projectile(this.game, this.x + this.width - 25, this.y + 30))
     this.game.ammo.current--
   }
 }
