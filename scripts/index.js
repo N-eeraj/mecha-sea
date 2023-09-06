@@ -21,7 +21,7 @@ const init = () => {
     lastTime = timeStamp
 
     ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT)
-    game.update()
+    game.update(deltaTime)
     game.draw(ctx)
     requestAnimationFrame(animate)
   }

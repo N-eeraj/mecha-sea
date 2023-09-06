@@ -32,8 +32,8 @@ export default class Player {
   }
 
   shootTop() {
-    if (!this.game.playerAmmo) return
+    if (!this.game.ammo.current) return
     this.projectiles.push(new Projectile(this.game, this.x + this.width / 2, this.y))
-    this.game.playerAmmo--
+    this.game.ammo.current--
   }
 }
