@@ -19,6 +19,8 @@ export default class Player {
     else this.speedY = 0
 
     this.y -= this.speedY
+    if (this.y < 0) this.y = 0
+    else if (this.y + this.height > this.game.height) this.y = this.game.height - this.height
 
     // handle projectiles
     this.projectiles.forEach(projectile => projectile.update())

@@ -1,6 +1,7 @@
 import InputHandler from "./input.js"
 import Player from "./player.js"
 import { Angler } from "./enemies.js"
+import Background from "./background.js"
 import UI from "./ui.js"
 
 export default class Game {
@@ -26,6 +27,7 @@ export default class Game {
     this.player = new Player(this)
     this.input = new InputHandler(this)
     this.ui = new UI(this)
+    this.background = new Background(this)
   }
 
   update(deltaTime) {
@@ -51,10 +53,8 @@ export default class Game {
     this.enemy.current.forEach(enemy => {
       enemy.update()
 
-      if (this.checkCollission(this.player, enemy)) {
+      if (this.checkCollission(this.player, enemy))
         this.gameOver = true
-        enemy.readyToRemove = true
-      }
 
       this.player.projectiles.forEach(projectile => {
         if (this.checkCollission(projectile, enemy)) {
@@ -68,12 +68,17 @@ export default class Game {
     })
     this.enemy.current = this.enemy.current.filter(({ readyToRemove }) => !readyToRemove)
 
+    this.background.update()
+    this.background.foregroundLayer.update()
     this.player.update()
   }
 
   draw(context) {
+    this.background.draw(context)
     this.player.draw(context)
     this.enemy.current.forEach(enemy => enemy.draw(context))
+    this.background.foregroundLayer.draw(context)
+
     this.ui.draw(context)
   }
 
