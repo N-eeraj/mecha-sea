@@ -4,7 +4,8 @@ import {
   Angler1,
   Angler2,
   Lucky,
-} from "./enemies.js"
+} from "./enemies/index.js"
+import Particles from "./particles.js"
 import Background from "./background.js"
 import UI from "./ui.js"
 
@@ -21,6 +22,7 @@ export default class Game {
       timer: 0,
       interval: 1000,
     }
+    this.particles = []
 
     this.player = new Player(this)
     this.input = new InputHandler(this)
@@ -51,20 +53,27 @@ export default class Game {
             break
         }
         enemy.readyToRemove = true
+        this.showParticles(enemy, 5)
       }
 
       // projectile collision
       this.player.projectiles.forEach(projectile => {
         if (this.checkCollission(projectile, enemy)) {
           projectile.readyToRemove = true
+          this.showParticles(enemy, 1)
+
           if (--enemy.health <= 0) {
             enemy.readyToRemove = true
             this.score += enemy.score
+            this.showParticles(enemy, 5)
           }
         }
       })
     })
     this.enemy.current = this.enemy.current.filter(({ readyToRemove }) => !readyToRemove)
+
+    this.particles.forEach(particle => particle.update())
+    this.particles = this.particles.filter(({ readyToRemove }) => !readyToRemove)
 
     this.background.update()
     this.background.foregroundLayer.update()
@@ -73,11 +82,11 @@ export default class Game {
 
   draw(context) {
     this.background.draw(context)
+    this.ui.draw(context)
     this.player.draw(context)
     this.enemy.current.forEach(enemy => enemy.draw(context))
+    this.particles.forEach(particle => particle.draw(context))
     this.background.foregroundLayer.draw(context)
-
-    this.ui.draw(context)
   }
 
   addEnemy() {
@@ -96,6 +105,16 @@ export default class Game {
       object1.y < object2.y + object2.height &&
       object1.y + object1.height > object2.y
     )
+  }
+
+  showParticles(enemy, count) {
+    for (let i = 0; i < count; i++) {
+      this.particles.push(new Particles({
+        game: this,
+        x: enemy.x + enemy.width * 0.5,
+        y: enemy.y + enemy.height * 0.5,
+      }))
+    }
   }
 
   triggerGameOver() {
