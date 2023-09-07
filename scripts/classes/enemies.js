@@ -1,5 +1,5 @@
 class Enemy {
-  constructor({ game, image, frames, speed, health, score }) {
+  constructor({ game, image, frames, speed, health, score, damage = 0, type = 'damage' }) {
     this.game = game
     this.image = image
     this.x = this.game.width
@@ -7,6 +7,8 @@ class Enemy {
     this.health = health
     this.score = score
     this.speedX = -speed
+    this.damage = damage
+    this.type = type
     this.readyToRemove = false
   }
 
@@ -20,7 +22,6 @@ class Enemy {
   }
 
   draw(context) {
-    context.fillStyle = 'red'
     context.drawImage(this.image, this.frame.x * this.width, this.frame.y * this.height, this.width, this.height, this.x, this.y, this.width, this.height)
   }
 }
@@ -34,11 +35,12 @@ export class Angler1 extends Enemy {
       frames: {
         x: 0,
         y: Math.floor(Math.random() * 3),
-        max: 38
+        max: 38,
       },
       speed: 1.75,
       score: 10,
       health: 5,
+      damage: 1,
     })
     this.width = 228
     this.height = 169
@@ -55,11 +57,12 @@ export class Angler2 extends Enemy {
       frames: {
         x: 0,
         y: Math.floor(Math.random() * 2),
-        max: 38
+        max: 38,
       },
       speed: 1.5,
       score: 12,
       health: 5,
+      damage: 2,
     })
     this.width = 213
     this.height = 169
@@ -81,6 +84,7 @@ export class Lucky extends Enemy {
       speed: 3,
       score: 25,
       health: 3,
+      type: 'lucky',
     })
     this.width = 99
     this.height = 95

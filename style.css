@@ -12,8 +12,9 @@
   background-color: #4d79bc;
   border: 5px solid black;
   transform: translate(-50%, -50%);
+  font-family: 'Bangers', cursive;
 }
 
-.spritesheet, .layer {
+.spritesheet, .props, .layer {
   display: none;
 }

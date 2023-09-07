@@ -16,12 +16,6 @@ export default class Game {
     this.gameOver = false
 
     this.score = 0
-    this.ammo = {
-      current: 25,
-      max: 50,
-      timer: 50,
-      interval: 500,
-    }
     this.enemy = {
       current: [],
       timer: 0,
@@ -35,16 +29,6 @@ export default class Game {
   }
 
   update(deltaTime) {
-    // ammo updation
-    if (this.ammo.timer > this.ammo.interval) {
-      if (this.ammo.current < this.ammo.max) {
-        this.ammo.current++
-        this.ammo.timer = 0
-      }
-    }
-    else
-      this.ammo.timer += deltaTime
-
     // enemy updation
     if (this.enemy.timer > this.enemy.interval && !this.gameOver)  {
       this.addEnemy()
@@ -57,9 +41,19 @@ export default class Game {
     this.enemy.current.forEach(enemy => {
       enemy.update()
 
-      if (this.checkCollission(this.player, enemy))
-        this.gameOver = true
+      if (this.checkCollission(this.player, enemy)) {
+        switch(enemy.type) {
+          case 'damage':
+            this.player.takeDamage(enemy.damage)
+            break
+          case 'lucky':
+            this.player.enterPowerUp()
+            break
+        }
+        enemy.readyToRemove = true
+      }
 
+      // projectile collision
       this.player.projectiles.forEach(projectile => {
         if (this.checkCollission(projectile, enemy)) {
           projectile.readyToRemove = true
@@ -74,7 +68,7 @@ export default class Game {
 
     this.background.update()
     this.background.foregroundLayer.update()
-    this.player.update()
+    this.player.update(deltaTime)
   }
 
   draw(context) {
@@ -102,5 +96,9 @@ export default class Game {
       object1.y < object2.y + object2.height &&
       object1.y + object1.height > object2.y
     )
+  }
+
+  triggerGameOver() {
+    this.gameOver = true
   }
 }
