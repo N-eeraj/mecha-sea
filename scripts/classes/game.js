@@ -1,19 +1,21 @@
-import InputHandler from "./input.js"
-import Player from "./player.js"
+import InputHandler from './input.js'
+import Player from './player.js'
 import {
   Angler1,
   Angler2,
   Lucky,
   Hivewhale,
   Drone,
-} from "./enemies/index.js"
+} from './enemies/index.js'
 import {
   Fire,
   Smoke,
-} from "./explosions/index.js"
-import Particles from "./particles.js"
-import Background from "./background.js"
-import UI from "./ui.js"
+} from './explosions/index.js'
+import Particles from './particles.js'
+import Background from './background.js'
+import UI from './ui.js'
+import SoundController from './sounds.js'
+import Shield from './shield.js'
 
 export default class Game {
   constructor({ width, height }) {
@@ -34,8 +36,10 @@ export default class Game {
 
     this.player = new Player(this)
     this.input = new InputHandler(this)
-    this.ui = new UI(this)
     this.background = new Background(this)
+    this.ui = new UI(this)
+    this.sound = new SoundController()
+    this.shield = new Shield(this.player)
   }
 
   update(deltaTime) {
@@ -55,6 +59,8 @@ export default class Game {
         switch(enemy.type) {
           case 'damage':
           case 'hive':
+            this.sound.hit()
+            this.shield.active = true
             this.player.takeDamage(enemy.damage)
             break
           case 'lucky':
@@ -73,6 +79,7 @@ export default class Game {
           this.showParticles(enemy, 1)
 
           if (--enemy.health <= 0) {
+            this.sound.explosion()
             enemy.readyToRemove = true
             this.showExplosion(enemy)
             this.score += enemy.score
@@ -101,15 +108,20 @@ export default class Game {
     this.background.update()
     this.background.foregroundLayer.update()
     this.player.update(deltaTime)
+    if (this.shield.active)
+      this.shield.update(deltaTime)
 
     if (this.enemy.interval > this.enemy.minInterval)
-      --this.enemy.interval
+      this.enemy.interval -= 0.1
   }
 
   draw(context) {
     this.background.draw(context)
-    if (!this.gameOver)
+    if (!this.gameOver) {
       this.player.draw(context)
+      if (this.shield.active)
+        this.shield.draw(context)
+    }
     this.enemy.current.forEach(enemy => enemy.draw(context))
     this.particles.forEach(particle => particle.draw(context))
     this.explosions.forEach(explosion => explosion.draw(context))

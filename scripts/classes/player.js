@@ -69,6 +69,7 @@ export default class Player {
         this.frame.y = 1
       }
       else {
+        this.game.sound.powerDown()
         this.powerUp.state = false
         this.powerUp.timer = 0
         this.frame.y = 0
@@ -86,6 +87,7 @@ export default class Player {
 
   shootTop() {
     if (this.ammo.current < 1) return
+    this.game.sound.shot()
     this.projectiles.push(new Projectile(this.game, this.x + this.width - 25, this.y + 30))
     this.ammo.current--
   }
@@ -101,6 +103,7 @@ export default class Player {
   }
 
   enterPowerUp() {
+    this.game.sound.powerUp()
     this.powerUp.state = true
     this.powerUp.timer = 0
     this.ammo.current = this.ammo.max

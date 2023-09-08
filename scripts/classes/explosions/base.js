@@ -4,6 +4,8 @@ export default class Explosion {
     this.frame = {
       current: 0,
       max: 8,
+      timer: 0,
+      interval: 30,
     }
     this.sprite = {
       height: 200,
@@ -14,17 +16,15 @@ export default class Explosion {
     this.height = this.sprite.height * this.sizeModifier
     this.x = x - this.width * 0.5
     this.y = y - this.height * 0.5
-    this.timer = 0
-    this.interval = 30
     this.readyToRemove = false
   }
 
   update(deltaTime) {
-    if (this.timer > this.interval) {
+    if (this.frame.timer > this.frame.interval) {
       this.frame.current++
-      this.timer = 0
+      this.frame.timer = 0
     }
-    else this.timer += deltaTime
+    else this.frame.timer += deltaTime
 
     if (this.frame.current > this.frame.max)
       this.readyToRemove = true
