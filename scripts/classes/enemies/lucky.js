@@ -11,8 +11,8 @@ export default class Lucky extends Enemy {
         y: Math.floor(Math.random() * 2),
         max: 38
       },
-      speed: 3,
-      score: 25,
+      speed: 6,
+      score: 100,
       health: 3,
       type: 'lucky',
     })

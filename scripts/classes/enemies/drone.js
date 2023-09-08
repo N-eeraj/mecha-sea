@@ -11,8 +11,8 @@ export default class Drone extends Enemy {
         y: Math.floor(Math.random() * 2),
         max: 38,
       },
-      speed: 2.5,
-      score: 5,
+      speed: 5,
+      score: 10,
       health: 3,
       damage: 1,
     })

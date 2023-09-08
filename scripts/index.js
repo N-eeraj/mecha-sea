@@ -4,7 +4,7 @@ import Game from './classes/game.js'
 const init = () => {
 
   // constants & variables
-  const GAME_WIDTH = 720
+  const GAME_WIDTH = 1080
   const GAME_HEIGHT = 480
   const canvas = document.getElementById('canvas')
   const ctx = canvas.getContext('2d')
@@ -23,8 +23,7 @@ const init = () => {
     ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT)
     game.update(deltaTime)
     game.draw(ctx)
-    if (!game.gameOver)
-      requestAnimationFrame(animate)
+    requestAnimationFrame(animate)
   }
 
   canvas.width = GAME_WIDTH

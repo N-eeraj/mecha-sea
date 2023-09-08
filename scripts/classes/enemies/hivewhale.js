@@ -11,9 +11,9 @@ export default class Hivewhale extends Enemy {
         y: 0,
         max: 38,
       },
-      speed: 1,
-      score: 20,
-      health: 10,
+      speed: 2.5,
+      score: 80,
+      health: 15,
       damage: 5,
       type: 'hive'
     })

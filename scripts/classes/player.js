@@ -34,6 +34,8 @@ export default class Player {
   }
 
   update(deltaTime) {
+    if (this.game.gameOver) return
+
     // handle movement
     if (this.game.keys.includes('ArrowUp')) (this.speedY += 5)
     else if (this.game.keys.includes('ArrowDown')) (this.speedY -= 5)
@@ -62,7 +64,7 @@ export default class Player {
     // power up updation
     if (this.powerUp.state) {
       if (this.powerUp.timer <= this.powerUp.limit) {
-        this.ammo.current += 0.1
+        this.ammo.current += 0.5
         this.powerUp.timer += deltaTime
         this.frame.y = 1
       }

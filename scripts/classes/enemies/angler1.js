@@ -11,10 +11,10 @@ export default class Angler1 extends Enemy {
         y: Math.floor(Math.random() * 3),
         max: 38,
       },
-      speed: 1.75,
-      score: 10,
+      speed: 3.5,
+      score: 25,
       health: 5,
-      damage: 1,
+      damage: 2,
     })
     this.width = 228
     this.height = 169

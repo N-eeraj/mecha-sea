@@ -7,6 +7,10 @@ import {
   Hivewhale,
   Drone,
 } from "./enemies/index.js"
+import {
+  Fire,
+  Smoke,
+} from "./explosions/index.js"
 import Particles from "./particles.js"
 import Background from "./background.js"
 import UI from "./ui.js"
@@ -22,9 +26,11 @@ export default class Game {
     this.enemy = {
       current: [],
       timer: 0,
-      interval: 1000,
+      interval: 2500,
+      minInterval: 1000,
     }
     this.particles = []
+    this.explosions = []
 
     this.player = new Player(this)
     this.input = new InputHandler(this)
@@ -57,6 +63,7 @@ export default class Game {
         }
         enemy.readyToRemove = true
         this.showParticles(enemy, 5)
+        this.showExplosion(enemy)
       }
 
       // projectile collision
@@ -67,6 +74,7 @@ export default class Game {
 
           if (--enemy.health <= 0) {
             enemy.readyToRemove = true
+            this.showExplosion(enemy)
             this.score += enemy.score
             this.showParticles(enemy, 5)
             if (enemy.type === 'hive') {
@@ -87,16 +95,24 @@ export default class Game {
     this.particles.forEach(particle => particle.update())
     this.particles = this.particles.filter(({ readyToRemove }) => !readyToRemove)
 
+    this.explosions.forEach(explosion => explosion.update(deltaTime))
+    this.explosions = this.explosions.filter(({ readyToRemove }) => !readyToRemove)
+
     this.background.update()
     this.background.foregroundLayer.update()
     this.player.update(deltaTime)
+
+    if (this.enemy.interval > this.enemy.minInterval)
+      --this.enemy.interval
   }
 
   draw(context) {
     this.background.draw(context)
-    this.player.draw(context)
+    if (!this.gameOver)
+      this.player.draw(context)
     this.enemy.current.forEach(enemy => enemy.draw(context))
     this.particles.forEach(particle => particle.draw(context))
+    this.explosions.forEach(explosion => explosion.draw(context))
     this.background.foregroundLayer.draw(context)
     this.ui.draw(context)
   }
@@ -112,12 +128,13 @@ export default class Game {
   }
 
   checkCollission(object1, object2) {
-    return (
-      object1.x < object2.x + object2.width &&
-      object1.x + object1.width > object2.x &&
-      object1.y < object2.y + object2.height &&
-      object1.y + object1.height > object2.y
-    )
+    if (!this.gameOver)
+      return (
+        object1.x < object2.x + object2.width &&
+        object1.x + object1.width > object2.x &&
+        object1.y < object2.y + object2.height &&
+        object1.y + object1.height > object2.y
+      )
   }
 
   showParticles(enemy, count) {
@@ -128,6 +145,18 @@ export default class Game {
         y: enemy.y + enemy.height * 0.5,
       }))
     }
+  }
+
+  showExplosion(enemy) {
+    const options = {
+      game: this,
+      x: enemy.x + enemy.width * 0.5,
+      y: enemy.y + enemy.height * 0.5,
+    }
+    this.explosions.push((() => {
+      if (Math.random() < 0.5) return new Smoke(options)
+      return new Fire(options)
+    })())
   }
 
   triggerGameOver() {
