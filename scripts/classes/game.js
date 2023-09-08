@@ -4,6 +4,8 @@ import {
   Angler1,
   Angler2,
   Lucky,
+  Hivewhale,
+  Drone,
 } from "./enemies/index.js"
 import Particles from "./particles.js"
 import Background from "./background.js"
@@ -46,6 +48,7 @@ export default class Game {
       if (this.checkCollission(this.player, enemy)) {
         switch(enemy.type) {
           case 'damage':
+          case 'hive':
             this.player.takeDamage(enemy.damage)
             break
           case 'lucky':
@@ -66,6 +69,15 @@ export default class Game {
             enemy.readyToRemove = true
             this.score += enemy.score
             this.showParticles(enemy, 5)
+            if (enemy.type === 'hive') {
+              for (let i = 0; i < 5; i++) {
+                this.enemy.current.push(new Drone({
+                  game: this,
+                  x: enemy.x + Math.random() * enemy.width,
+                  y: enemy.y + Math.random() * enemy.height,
+                }))
+              }
+            }
           }
         }
       })
@@ -82,11 +94,11 @@ export default class Game {
 
   draw(context) {
     this.background.draw(context)
-    this.ui.draw(context)
     this.player.draw(context)
     this.enemy.current.forEach(enemy => enemy.draw(context))
     this.particles.forEach(particle => particle.draw(context))
     this.background.foregroundLayer.draw(context)
+    this.ui.draw(context)
   }
 
   addEnemy() {
@@ -94,7 +106,8 @@ export default class Game {
     this.enemy.current.push((() => {
       if (random < 0.4) return new Angler1(this)
       if (random < 0.8) return new Angler2(this)
-      return new Lucky(this)
+      if (random < 0.9) return new Lucky(this)
+      return new Hivewhale(this)
     })())
   }
 
