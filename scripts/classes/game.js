@@ -6,6 +6,8 @@ import {
   Lucky,
   Hivewhale,
   Drone,
+  Bulbwhale,
+  Moonfish,
 } from './enemies/index.js'
 import {
   Fire,
@@ -15,7 +17,6 @@ import Particles from './particles.js'
 import Background from './background.js'
 import UI from './ui.js'
 import SoundController from './sounds.js'
-import Shield from './shield.js'
 
 export default class Game {
   constructor({ width, height }) {
@@ -39,7 +40,6 @@ export default class Game {
     this.background = new Background(this)
     this.ui = new UI(this)
     this.sound = new SoundController()
-    this.shield = new Shield(this.player)
   }
 
   update(deltaTime) {
@@ -59,12 +59,13 @@ export default class Game {
         switch(enemy.type) {
           case 'damage':
           case 'hive':
+          case 'moon':
             this.sound.hit()
-            this.shield.active = true
             this.player.takeDamage(enemy.damage)
             break
           case 'lucky':
-            this.player.enterPowerUp()
+            this.sound.shield()
+            this.player.recover(enemy.health)
             break
         }
         enemy.readyToRemove = true
@@ -84,7 +85,9 @@ export default class Game {
             this.showExplosion(enemy)
             this.score += enemy.score
             this.showParticles(enemy, 5)
-            if (enemy.type === 'hive') {
+            if (enemy.type === 'moon')
+              this.player.enterPowerUp()
+            else if (enemy.type === 'hive') {
               for (let i = 0; i < 5; i++) {
                 this.enemy.current.push(new Drone({
                   game: this,
@@ -108,8 +111,6 @@ export default class Game {
     this.background.update()
     this.background.foregroundLayer.update()
     this.player.update(deltaTime)
-    if (this.shield.active)
-      this.shield.update(deltaTime)
 
     if (this.enemy.interval > this.enemy.minInterval)
       this.enemy.interval -= 0.1
@@ -117,11 +118,8 @@ export default class Game {
 
   draw(context) {
     this.background.draw(context)
-    if (!this.gameOver) {
+    if (!this.gameOver)
       this.player.draw(context)
-      if (this.shield.active)
-        this.shield.draw(context)
-    }
     this.enemy.current.forEach(enemy => enemy.draw(context))
     this.particles.forEach(particle => particle.draw(context))
     this.explosions.forEach(explosion => explosion.draw(context))
@@ -132,10 +130,12 @@ export default class Game {
   addEnemy() {
     const random = Math.random()
     this.enemy.current.push((() => {
-      if (random < 0.4) return new Angler1(this)
-      if (random < 0.8) return new Angler2(this)
-      if (random < 0.9) return new Lucky(this)
-      return new Hivewhale(this)
+      if (random < 0.25) return new Angler1(this)
+      if (random < 0.5) return new Angler2(this)
+      if (random < 0.7) return new Bulbwhale(this)
+      if (random < 0.8) return new Hivewhale(this)
+      if (random < 0.9) return new Moonfish(this)
+      return new Lucky(this)
     })())
   }
 

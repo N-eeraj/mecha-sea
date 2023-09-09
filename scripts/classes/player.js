@@ -1,4 +1,5 @@
 import Projectile from "./projectile.js"
+import Shield from './shield.js'
 
 export default class Player {
   constructor(game) {
@@ -31,6 +32,7 @@ export default class Player {
       timer: 0,
       limit: 10_000,
     }
+    this.shield = new Shield(this)
   }
 
   update(deltaTime) {
@@ -76,6 +78,9 @@ export default class Player {
       }
     }
 
+    if (this.shield.active)
+      this.shield.update(deltaTime)
+
     if (this.frame.x < this.frame.max) ++this.frame.x
     else this.frame.x = 0
   }
@@ -83,6 +88,8 @@ export default class Player {
   draw(context) {
     this.projectiles.forEach(projectile => projectile.draw(context))
     context.drawImage(this.image, this.frame.x * this.width, this.frame.y * this.height, this.width, this.height, this.x, this.y, this.width, this.height)
+    if (this.shield.active)
+      this.shield.draw(context)
   }
 
   shootTop() {
@@ -100,6 +107,13 @@ export default class Player {
   takeDamage(damage) {
     this.hp.current -= damage
     if (this.hp.current <= 0) this.game.triggerGameOver()
+  }
+
+  recover(heal) {
+    this.shield.active = true
+    this.hp.current += heal
+    if (this.hp.current > this.hp.max)
+      this.hp.current = this.hp.max
   }
 
   enterPowerUp() {
