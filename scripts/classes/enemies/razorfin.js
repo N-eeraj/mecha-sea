@@ -1,8 +1,8 @@
 import Enemy from './base.js'
 
-export default class Moonfish extends Enemy {
+export default class Razorfin extends Enemy {
   constructor(game) {
-    const image = document.getElementById('moonfish')
+    const image = document.getElementById('razorfin')
     super({
       game,
       image,
@@ -11,14 +11,13 @@ export default class Moonfish extends Enemy {
         y: 0,
         max: 38,
       },
-      speed: 6,
-      score: 30,
+      speed: 2,
+      score: 15,
       health: 5,
-      damage: 3,
-      type: 'moon',
+      damage: 1,
     })
-    this.width = 227
-    this.height = 240
+    this.width = 187
+    this.height = 149
     this.y = Math.random() * (this.game.height * 0.9 - this.height)
   }
 }

@@ -1,8 +1,8 @@
 import Enemy from './base.js'
 
-export default class Moonfish extends Enemy {
+export default class Stalker extends Enemy {
   constructor(game) {
-    const image = document.getElementById('moonfish')
+    const image = document.getElementById('stalker')
     super({
       game,
       image,
@@ -11,14 +11,13 @@ export default class Moonfish extends Enemy {
         y: 0,
         max: 38,
       },
-      speed: 6,
-      score: 30,
-      health: 5,
-      damage: 3,
-      type: 'moon',
+      speed: 4.5,
+      score: 15,
+      health: 3,
+      damage: 2.5,
     })
-    this.width = 227
-    this.height = 240
+    this.width = 243
+    this.height = 123
     this.y = Math.random() * (this.game.height * 0.9 - this.height)
   }
 }

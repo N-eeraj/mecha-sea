@@ -5,6 +5,8 @@ import Hivewhale from './hivewhale.js'
 import Drone from './drone.js'
 import Bulbwhale from './bulbwhale.js'
 import Moonfish from './moonfish.js'
+import Stalker from './stalker.js'
+import Razorfin from './razorfin.js'
 
 export {
   Angler1,
@@ -14,4 +16,6 @@ export {
   Drone,
   Bulbwhale,
   Moonfish,
+  Stalker,
+  Razorfin,
 }

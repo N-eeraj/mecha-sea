@@ -48,7 +48,7 @@ export default class Player {
     else if (this.y + this.height > this.game.height) this.y = this.game.height - this.height
 
     // handle projectiles
-    this.projectiles.forEach(projectile => projectile.update())
+    this.projectiles.forEach(projectile => projectile.update(deltaTime))
     this.projectiles = this.projectiles.filter(({ readyToRemove }) => !readyToRemove)
 
     // ammo updation
