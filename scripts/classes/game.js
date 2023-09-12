@@ -177,5 +177,7 @@ export default class Game {
 
   triggerGameOver() {
     this.gameOver = true
+    const event = new Event('gameOver')
+    document.dispatchEvent(event)
   }
 }
