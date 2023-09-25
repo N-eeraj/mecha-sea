@@ -1,15 +1,8 @@
 import InputHandler from './input.js'
 import Player from './player.js'
 import {
-  Angler1,
-  Angler2,
-  Lucky,
-  Hivewhale,
   Drone,
-  Bulbwhale,
-  Moonfish,
-  Stalker,
-  Razorfin,
+  getRandomEnemy,
 } from './enemies/index.js'
 import {
   Fire,
@@ -47,7 +40,7 @@ export default class Game {
   update(deltaTime) {
     // enemy updation
     if (this.enemy.timer > this.enemy.interval && !this.gameOver)  {
-      this.addEnemy()
+      this.enemy.current.push((() => getRandomEnemy(this))())
       this.enemy.timer = 0
     }
     else
@@ -127,20 +120,6 @@ export default class Game {
     this.explosions.forEach(explosion => explosion.draw(context))
     this.background.foregroundLayer.draw(context)
     this.ui.draw(context)
-  }
-
-  addEnemy() {
-    const random = Math.random()
-    this.enemy.current.push((() => {
-      if (random < 0.25) return new Angler1(this)
-      if (random < 0.5) return new Angler2(this)
-      if (random < 0.6) return new Bulbwhale(this)
-      if (random < 0.7) return new Stalker(this)
-      if (random < 0.8) return new Razorfin(this)
-      if (random < 0.9) return new Moonfish(this)
-      if (random < 0.95) return new Hivewhale(this)
-      return new Lucky(this)
-    })())
   }
 
   checkCollission(object1, object2) {
